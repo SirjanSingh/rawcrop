@@ -7,29 +7,40 @@ export default function FileUpload() {
   // Handle file selection & API upload
   const handleFiles = async (newFiles) => {
     const uploadedFiles = [];
-
+  
     for (const file of newFiles) {
       const formData = new FormData();
       formData.append("file", file);
-
+   
       try {
         const response = await fetch("http://127.0.0.1:8000/upload/", {
           method: "POST",
           body: formData,
         });
-
-        const data = await response.json();
+  
+        if (!response.ok) {
+          throw new Error(`Server responded with ${response.status}`);
+        }
+  
+        const data = await response.json(); // ✅ FIXED: Properly extracting response JSON
+        console.log("📤 Upload Response:", data);
+  
+        alert(`✅ Uploaded: ${data.filename}`);
+  
         uploadedFiles.push({
           name: file.name,
-          preview: data.preview_url, // Backend se preview URL le raha hai
+          preview: URL.createObjectURL(file), // Show preview
         });
+  
       } catch (error) {
-        console.error("Upload failed:", error);
+        console.error("❌ Upload failed:", error);
+        alert("Error uploading file");
       }
     }
-
-    setFiles([...files, ...uploadedFiles]);
+  
+    setFiles((prevFiles) => [...prevFiles, ...uploadedFiles]);
   };
+  
 
   // Drag & Drop using react-dropzone
   const { getRootProps, getInputProps } = useDropzone({
