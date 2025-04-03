@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 import os
 import uuid
 import rawpy
+import shutil
 import imageio
 from PIL import Image  # 🆕 For handling PNG/JPG
 from fastapi.staticfiles import StaticFiles
@@ -25,6 +26,7 @@ UPLOAD_DIR = "uploads"
 PROCESSED_DIR = "processed"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(PROCESSED_DIR, exist_ok=True)
+
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
@@ -66,6 +68,19 @@ async def upload_file(file: UploadFile = File(...)):
     except Exception as e:
         print(f"❌ Image processing failed: {str(e)}")
         return JSONResponse(content={"error": "Failed to process image"}, status_code=500)
-    
+
+@app.delete("/clear-data")
+async def clear_data():
+    try:
+        # Delete all files in upload/ and processed/ folders
+        for folder in [UPLOAD_DIR, PROCESSED_DIR]:
+            if os.path.exists(folder):
+                shutil.rmtree(folder)  # Delete folder and contents
+                os.makedirs(folder)  # Recreate empty folder
+        
+        return {"message": "Upload and Processed folders cleared!"}
+    except Exception as e:
+        return {"error": str(e)}
+
 from fastapi.staticfiles import StaticFiles
 app.mount("/processed", StaticFiles(directory=PROCESSED_DIR), name="processed")
