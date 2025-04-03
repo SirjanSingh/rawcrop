@@ -4,37 +4,38 @@ import { useDropzone } from "react-dropzone";
 export default function FileUpload() {
   const [files, setFiles] = useState([]);
 
-  // Handle file selection & API upload
+  // ✅ Handle file upload
   const handleFiles = async (newFiles) => {
     const uploadedFiles = [];
   
     for (const file of newFiles) {
       const formData = new FormData();
       formData.append("file", file);
-   
+  
       try {
+        console.log("📤 Uploading file:", file.name);
+  
         const response = await fetch("http://127.0.0.1:8000/upload/", {
           method: "POST",
           body: formData,
         });
   
         if (!response.ok) {
-          throw new Error(`Server responded with ${response.status}`);
+          const errorData = await response.json();
+          throw new Error(errorData.error || `Server responded with ${response.status}`);
         }
   
-        const data = await response.json(); // ✅ FIXED: Properly extracting response JSON
+        const data = await response.json();
         console.log("📤 Upload Response:", data);
-  
-        alert(`✅ Uploaded: ${data.filename}`);
   
         uploadedFiles.push({
           name: file.name,
-          preview: URL.createObjectURL(file), // Show preview
+          preview: `http://127.0.0.1:8000/processed/${data.filename}.jpg`,
         });
   
       } catch (error) {
         console.error("❌ Upload failed:", error);
-        alert("Error uploading file");
+        alert(`Error uploading file: ${error.message}`);
       }
     }
   
@@ -42,13 +43,13 @@ export default function FileUpload() {
   };
   
 
-  // Drag & Drop using react-dropzone
+  // ✅ Drag & Drop
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*",
     onDrop: handleFiles,
   });
 
-  // Paste Upload
+  // ✅ Handle Paste Upload
   useEffect(() => {
     const handlePaste = async (event) => {
       const clipboardItems = event.clipboardData?.items;
@@ -68,6 +69,11 @@ export default function FileUpload() {
     return () => document.removeEventListener("paste", handlePaste);
   }, [files]);
 
+  // ✅ Function to remove an image
+  const handleRemoveImage = (index) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="flex flex-col items-center p-4 border border-gray-300 rounded-lg">
       {/* Drag & Drop */}
@@ -82,15 +88,21 @@ export default function FileUpload() {
       {/* Image Previews */}
       <div className="grid grid-cols-4 gap-4 mt-4">
         {files.map((file, index) => (
-          <div key={index} className="w-24 h-24 border border-gray-300 rounded-lg overflow-hidden">
-            <img
-              src={file.preview}
-              alt={file.name}
-              className="w-full h-full object-cover"
-            />
+          <div key={index} className="relative w-24 h-24 border border-gray-300 rounded-lg">
+            <img src={file.preview} alt={file.name} className="w-full h-full object-cover" />
+
+            {/* Remove Button */}
+            <button
+              className="absolute top-0 right-0 m-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-lg z-50 hover:bg-red-700"
+              onClick={() => handleRemoveImage(index)}
+            >
+              ✖
+            </button>
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+
