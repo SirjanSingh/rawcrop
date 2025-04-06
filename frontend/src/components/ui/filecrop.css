@@ -1,0 +1,39 @@
+.image-wrapper {
+  margin: 20px;
+  text-align: center;
+}
+
+.preview-img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.edit-btn, .crop-btn, .cancel-btn {
+  margin: 5px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.crop-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.crop-area {
+  position: relative;
+  width: 400px;
+  height: 300px;
+  background: #000;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.crop-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}

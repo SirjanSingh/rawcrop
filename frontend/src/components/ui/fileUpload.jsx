@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
-export default function FileUpload() {
-  const [files, setFiles] = useState([]);
+export default function FileUpload({ files, setFiles }) {
+  // const [files, setFiles] = useState([]);
 
   // ✅ Handle file upload
   const handleFiles = async (newFiles) => {
@@ -73,30 +73,8 @@ export default function FileUpload() {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
-  // ✅ Function to clear all data
-  const clearData = async () => {
-    if (!window.confirm("Are you sure you want to delete all files?")) return;
-
-    const response = await fetch("http://localhost:8000/clear-data", {
-      method: "DELETE",
-    });
-
-    const data = await response.json();
-    alert(data.message);
-    
-    // 🟢 Update UI by clearing file list
-    setFiles([]);
-  };
-
   return (
-<div className="relative flex flex-col items-center p-4 border border-gray-300 rounded-lg w-full">
-{/* ✅ Clear Data Button - Positioned correctly */}
-      <button
-        onClick={clearData}
-        className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition"
-      >
-        Clear Data
-      </button>
+    <div className="flex flex-col items-center p-4 border border-gray-300 rounded-lg">
 
       {/* 🟢 Drag & Drop */}
       <div
