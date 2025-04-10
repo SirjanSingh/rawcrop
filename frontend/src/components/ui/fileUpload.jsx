@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
-export default function FileUpload({ files, setFiles }) {
+export default function FileUpload({ files, setFiles, setPreviewURL }) {
   // const [files, setFiles] = useState([]);
 
   // ✅ Handle file upload
@@ -28,11 +28,17 @@ export default function FileUpload({ files, setFiles }) {
         const data = await response.json();
         console.log("📤 Upload Response:", data);
 
+        // const previewLink = `http://127.0.0.1:8000/processed/${data.filename}.jpg`;
+
         uploadedFiles.push({
           name: file.name,
-          preview: `http://127.0.0.1:8000/processed/${data.filename}.jpg`,
+          preview: `http://localhost:8000/processed/${data.filename}.jpg`,
         });
+        console.log("🔁 Trying to POST to backend...");
 
+        // ✅ Send the preview to App for cropping
+        // setPreviewURL(previewLink);
+        console.log("Using fetch URL:", "http://localhost:8000/upload/");
       } catch (error) {
         console.error("❌ Upload failed:", error);
         alert(`Error uploading file: ${error.message}`);

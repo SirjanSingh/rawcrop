@@ -9,14 +9,18 @@ function FileCrop({ imageSrc, onCropComplete }) {
 
   const handleCrop = () => {
     const cropper = cropperRef.current?.cropper;
-    if (cropper) {
-      cropper.getCroppedCanvas().toBlob((blob) => {
-        if (blob) {
-          setCroppedData(blob);
-          onCropComplete(blob); // Send to parent or backend
-        }
-      }, "image/jpeg");
+    if (!cropper) {
+      console.warn("⚠️ Cropper not ready yet!");
+      return;
     }
+
+    const cropData = cropper.getData(true);
+    cropper.getCroppedCanvas().toBlob((blob) => {
+      if (blob) {
+        setCroppedData(blob);
+        onCropComplete(blob, cropData);
+      }
+    }, "image/jpeg");
   };
 
   return (
@@ -26,7 +30,7 @@ function FileCrop({ imageSrc, onCropComplete }) {
           src={imageSrc}
           style={{ height: "100%", width: "100%" }}
           initialAspectRatio={NaN}
-          aspectRatio={NaN} // Free aspect ratio
+          aspectRatio={NaN}
           guides={true}
           viewMode={1}
           dragMode="move"
@@ -39,21 +43,28 @@ function FileCrop({ imageSrc, onCropComplete }) {
           ref={cropperRef}
         />
       </div>
-      <button
-        onClick={handleCrop}
-        className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
-      >
-        Crop
-      </button>
-      {croppedData && (
-        <img
-          src={URL.createObjectURL(croppedData)}
-          alt="Cropped Preview"
-          className="mt-4 max-w-md rounded-xl shadow"
-        />
-      )}
 
+      {/* Button + Cropped Preview side by side */}
+      <div className="flex flex-row items-center gap-6">
+        <button
+          onClick={handleCrop}
+          disabled={!imageSrc}
+          className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Crop
+        </button>
+
+
+        {croppedData && (
+          <img
+            src={URL.createObjectURL(croppedData)}
+            alt="Cropped Preview"
+            className="max-w-[250px] max-h-[250px] rounded-xl shadow"
+          />
+        )}
+      </div>
     </div>
+
   );
 }
 

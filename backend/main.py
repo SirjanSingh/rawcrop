@@ -8,6 +8,7 @@ import imageio
 from PIL import Image  # 🆕 For handling PNG/JPG
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -27,6 +28,39 @@ PROCESSED_DIR = "processed"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(PROCESSED_DIR, exist_ok=True)
 
+class CropData(BaseModel):
+    filename: str
+    x: int
+    y: int
+    width: int
+    height: int
+@app.post("/crop-raw/")
+async def crop_raw_image(data: CropData):
+    raw_path = os.path.join(UPLOAD_DIR, data.filename)
+    preview_path = os.path.join(PROCESSED_DIR, f"cropped_{data.filename}.jpg")
+
+    try:
+        with rawpy.imread(raw_path) as raw:
+            rgb_image = raw.postprocess()
+            img = Image.fromarray(rgb_image)
+        
+            #apply cropping
+            cropped = img.crop((
+                int(data.x),
+                int(data.y),
+                int(data.x + data.width),
+                int(data.y + data.height) 
+            ))
+            cropped.save(preview_path)
+        return {
+            "message": "RAW image cropped",
+            "cropped_url": f"http://127.0.0.1:8000/processed/cropped_{data.filename}.jpg"
+        }
+    except Exception as e:
+        print(f"❌ Image processing failed: {str(e)}")
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+    
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
@@ -52,7 +86,7 @@ async def upload_file(file: UploadFile = File(...)):
         elif file_extension in ["png", "jpg", "jpeg", "tiff"]:  # ✅ PNG/JPG Handling
             img = Image.open(file_path)
             img = img.convert("RGB")  # Convert to JPEG format
-            img.thumbnail((256, 256))  # Optional: Resize
+            # img.thumbnail((256, 256))  # Optional: Resize
             img.save(preview_path, "JPEG")
 
         else:
