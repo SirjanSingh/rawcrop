@@ -1,3 +1,4 @@
+@import "./customAnimations.css";
 @tailwind base;
 
 @plugin "tailwindcss-animate";

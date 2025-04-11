@@ -1,0 +1,376 @@
+/* =========================================== */
+/*           Custom Animations CSS           */
+/* =========================================== */
+
+/* Theme variables */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #e74c3c;
+    --accent-color: #9b59b6;
+    --background-color: #f5f5f5;
+    --text-color: #333;
+    --border-color: #ddd;
+    --transition-duration: 0.3s;
+    --easing: ease-in-out;
+  }
+  
+  /* Global reset and base styles */
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    transition: background-color 0.5s var(--easing), color 0.5s var(--easing);
+  }
+  
+  /* =========================================== */
+  /*                ANIMATION CLASSES          */
+  /* =========================================== */
+  
+  /* Basic fade animations */
+  .animate-fadeIn {
+    animation: fadeIn 0.5s var(--easing) forwards;
+  }
+  
+  .animate-fadeOut {
+    animation: fadeOut 0.5s var(--easing) forwards;
+  }
+  
+  /* Slide In animations */
+  .animate-slideInLeft {
+    animation: slideInLeft 0.5s var(--easing) forwards;
+  }
+  .animate-slideInRight {
+    animation: slideInRight 0.5s var(--easing) forwards;
+  }
+  .animate-slideDown {
+    animation: slideDown 0.5s var(--easing) forwards;
+  }
+  .animate-slideUp {
+    animation: slideUp 0.5s var(--easing) forwards;
+  }
+  
+  /* Zoom animations */
+  .animate-zoomIn {
+    animation: zoomIn 0.5s var(--easing) forwards;
+  }
+  .animate-zoomOut {
+    animation: zoomOut 0.5s var(--easing) forwards;
+  }
+  
+  /* Bounce and pulse */
+  .animate-bounce {
+    animation: bounce 1s var(--easing) infinite;
+  }
+  
+  .animate-pulse {
+    animation: pulse 1.5s var(--easing) infinite;
+  }
+  
+  /* Glow effect for focus states */
+  .animate-glow {
+    animation: glow 0.5s var(--easing) forwards;
+  }
+  
+  /* Gradient background animation */
+  .animate-gradient {
+    animation: gradient 15s ease infinite;
+  }
+  
+  /* Scroll reveal */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: reveal 0.6s var(--easing) forwards;
+  }
+  
+  /* =========================================== */
+  /*              KEYFRAMES                    */
+  /* =========================================== */
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  
+  @keyframes slideInLeft {
+    0% { transform: translateX(-100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+  
+  @keyframes slideInRight {
+    0% { transform: translateX(100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+  
+  @keyframes slideDown {
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    0% { transform: translateY(100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  
+  @keyframes zoomIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  @keyframes zoomOut {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    60% { transform: translateY(-10px); }
+  }
+  
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+  
+  @keyframes glow {
+    0% { box-shadow: 0 0 5px var(--primary-color); }
+    50% { box-shadow: 0 0 15px var(--primary-color); }
+    100% { box-shadow: 0 0 5px var(--primary-color); }
+  }
+  
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes reveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Spinner for loading overlays */
+  .loader {
+    border: 8px solid var(--border-color);
+    border-top: 8px solid var(--primary-color);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* =========================================== */
+  /*         COMPONENT-SPECIFIC STYLES         */
+  /* =========================================== */
+  
+  /* Navbar with slide-in animation */
+  .navbar {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 15px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    animation: slideInDown 0.5s var(--easing) forwards;
+  }
+  
+  @keyframes slideInDown {
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  
+  /* Footer with fade-in */
+  .footer {
+    background-color: var(--primary-color);
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    animation: fadeIn 1s var(--easing) forwards;
+  }
+  
+  /* Card styling with hover lift and shadow */
+  .card {
+    background-color: #fff;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s var(--easing), box-shadow 0.3s var(--easing);
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Buttons with hover and focus animations */
+  button {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s var(--easing), transform 0.3s var(--easing);
+  }
+  
+  button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+  }
+  
+  button:focus {
+    outline: none;
+    animation: pulse 1s var(--easing) infinite;
+  }
+  
+  /* Link styles with subtle zoom on hover */
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s var(--easing), transform 0.3s var(--easing);
+  }
+  
+  a:hover {
+    color: var(--secondary-color);
+    transform: scale(1.05);
+  }
+  
+  /* Input and form element enhancements */
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    transition: border-color 0.3s var(--easing), box-shadow 0.3s var(--easing);
+  }
+  
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--primary-color);
+    animation: glow 0.5s var(--easing) forwards;
+  }
+  
+  /* Modal overlay and content animations */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s var(--easing) forwards;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 600px;
+    width: 90%;
+    animation: slideDown 0.3s var(--easing) forwards;
+  }
+  
+  /* FileUpload component styling */
+  .file-upload {
+    border: 2px dashed var(--border-color);
+    padding: 20px;
+    text-align: center;
+    transition: background-color 0.3s var(--easing);
+  }
+  
+  .file-upload:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+  }
+  
+  /* Crop area in FileCrop component with pulse animation */
+  .crop-area {
+    position: relative;
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+    animation: pulse 1.5s var(--easing) infinite;
+  }
+  
+  /* Download button styling */
+  .download-btn {
+    background-color: var(--secondary-color);
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s var(--easing), transform 0.3s var(--easing);
+  }
+  
+  .download-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-3px);
+  }
+  
+  /* Animated banner / header with gradient */
+  .banner {
+    background: linear-gradient(-45deg, #e74c3c, #3498db, #9b59b6, #e67e22);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    color: #fff;
+    padding: 50px 20px;
+    text-align: center;
+  }
+  
+  /* Loader overlay for page transitions */
+  .loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s var(--easing) forwards;
+  }
+  
+  /* Responsive tweaks for mobile devices */
+  @media (max-width: 768px) {
+    .modal-content {
+      margin: 50px 10px;
+      animation: slideUp 0.3s var(--easing) forwards;
+    }
+    .navbar {
+      padding: 10px 15px;
+      animation: slideInDown 0.5s var(--easing) forwards;
+    }
+  }
+  
