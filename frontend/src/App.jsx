@@ -1,33 +1,58 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FileUpload from "@/components/ui/FileUpload";
 import FileCrop from "@/components/ui/FileCrop";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
 function App() {
-  // State for managing uploaded files, previews, cropped preview and cropped raw URL.
   const [files, setFiles] = useState([]);
   const [previewURL, setPreviewURL] = useState(null);
-  const [croppedURL, setCroppedURL] = useState(null);       // Color JPEG preview after crop.
-  const [croppedRawURL, setCroppedRawURL] = useState(null);   // Downloadable cropped raw file.
-  const [mode, setMode] = useState("preview");                // "preview" or "edit" mode.
+  const [croppedURL, setCroppedURL] = useState(null);
+  const [croppedRawURL, setCroppedRawURL] = useState(null);
+  const [mode, setMode] = useState("preview");
   const [loading, setLoading] = useState(false);
+  const [theme, setTheme] = useState("dark");
 
-  // Clears all files and resets state.
-  const clearAllData = async () => {
-    if (!window.confirm("Are you sure you want to delete all files?")) return;
-    const response = await fetch("http://127.0.0.1:8000/clear-data", {
-      method: "DELETE",
-    });
-    const data = await response.json();
-    alert(data.message);
-    setFiles([]);
-    setPreviewURL(null);
-    setCroppedURL(null);
-    setCroppedRawURL(null);
+  useEffect(() => {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(prefersDark ? "dark" : "light");
+    
+    const handleColorSchemeChange = (e) => {
+      setTheme(e.matches ? "dark" : "light");
+    };
+    
+    window.matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", handleColorSchemeChange);
+      
+    return () => {
+      window.matchMedia("(prefers-color-scheme: dark)")
+        .removeEventListener("change", handleColorSchemeChange);
+    };
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  // This function sends the crop coordinates (from the interactive cropper)
-  // to the backend and expects two URLs in the response.
+  const clearAllData = async () => {
+    if (!window.confirm("Are you sure you want to delete all files?")) return;
+    try {
+      const response = await fetch("http://127.0.0.1:8000/clear-data", {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      setFiles([]);
+      setPreviewURL(null);
+      setCroppedURL(null);
+      setCroppedRawURL(null);
+    } catch (error) {
+      console.error("Error clearing data:", error);
+      alert("Failed to clear data: " + error.message);
+    }
+  };
+
   const sendCropDataToBackend = async (cropData) => {
     if (!files.length) return;
     setLoading(true);
@@ -44,11 +69,9 @@ function App() {
         }),
       });
       const result = await response.json();
-      // Save the color preview URL for display.
       if (result.cropped_preview_url) {
         setCroppedURL(result.cropped_preview_url);
       }
-      // Save the cropped raw file URL for download.
       if (result.cropped_raw_url) {
         setCroppedRawURL(result.cropped_raw_url);
       }
@@ -60,87 +83,196 @@ function App() {
     }
   };
 
-  // Switch to editing mode.
-  const handleEdit = () => {
-    setMode("edit");
-  };
+  const handleEdit = () => setMode("edit");
+  const handleCancelCrop = () => setMode("preview");
 
-  // Cancel cropping and return to preview.
-  const handleCancelCrop = () => {
-    setMode("preview");
-  };
-
-  // For display, choose the cropped preview image if available; otherwise use the initial preview.
   const displayImage = croppedURL || previewURL;
-  // For the download link, if the cropped raw is available use that; otherwise fallback to the original raw URL.
   const downloadURL = croppedRawURL || (files[0] && files[0].raw_url) || "";
 
   return (
-    <div className="p-6 relative">
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="loader"></div>
-        </div>
-      )}
-
-      <button
-        onClick={clearAllData}
-        className="ml-auto bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition block mb-4"
-      >
-        Clear Data
-      </button>
-
-      {!files.length && (
-        <div>
-          <h1 className="text-3xl font-bold mb-4">Upload your RAW file here</h1>
-          <FileUpload files={files} setFiles={setFiles} setPreviewURL={setPreviewURL} />
-        </div>
-      )}
-
-      {files.length > 0 && mode === "preview" && (
-        <div className="grid grid-cols-2 gap-4 items-start">
-          {/* Left Panel: Image Preview & Edit Button */}
-          <div className="flex flex-col items-center">
-            {displayImage && (
-              <img
-                src={displayImage}
-                alt="Preview"
-                className="max-w-full max-h-[400px] rounded-md shadow-lg mb-4"
-              />
-            )}
-            <button onClick={handleEdit} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
-              Edit
-            </button>
+    <div className={`app-container ${theme}`}>
+      <div className="gradient-bg">
+        <div className="gradient-sphere gradient-sphere-1"></div>
+        <div className="gradient-sphere gradient-sphere-2"></div>
+        <div className="gradient-sphere gradient-sphere-3"></div>
+      </div>
+      
+      <div className="container mx-auto p-6 relative z-10">
+        <header className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold gradient-text">RAW Image Editor</h1>
+          <div className="flex gap-4">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={toggleTheme} 
+              className="theme-toggle"
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </Button>
+            <Button
+              onClick={clearAllData}
+              variant="destructive"
+              className="font-semibold"
+            >
+              Clear Data
+            </Button>
           </div>
-          {/* Right Panel: Metadata & Download */}
-          <div className="p-4 border rounded-md">
-            <h2 className="text-xl font-semibold mb-2">Image Metadata</h2>
-            <p>
-              <strong>Filename:</strong> {files[0]?.name}
-            </p>
-            <p>
-              <strong>File Extension:</strong> {files[0]?.name.split(".").pop().toUpperCase()}
-            </p>
-            {downloadURL && (
-              <a
-                href={downloadURL}
-                download
-                className="mt-4 inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              >
-                Download Cropped RAW
-              </a>
-            )}
+        </header>
+        
+        {loading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="pulse-loader">
+              <div className="spinner"></div>
+              <p className="mt-4 text-white font-medium">Processing image...</p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {files.length > 0 && mode === "edit" && (
-        <FileCrop
-          imageSrc={displayImage}
-          onCropComplete={(blob, cropData) => sendCropDataToBackend(cropData)}
-          onCancel={handleCancelCrop}
-        />
-      )}
+        <AnimatePresence mode="wait">
+          {!files.length ? (
+            <motion.div
+              key="upload"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-col items-center justify-center mt-16"
+            >
+              <Card className="w-full max-w-2xl mx-auto glass-card">
+                <CardHeader>
+                  <CardTitle className="text-2xl">Upload your RAW file</CardTitle>
+                  <CardDescription>
+                    Supported formats: NEF, CR2, ARW, DNG
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FileUpload
+                    files={files}
+                    setFiles={setFiles}
+                    setPreviewURL={setPreviewURL}
+                  />
+                </CardContent>
+                <CardFooter className="text-sm text-muted-foreground">
+                  You can also paste images from your clipboard
+                </CardFooter>
+              </Card>
+            </motion.div>
+          ) : mode === "preview" ? (
+            <motion.div
+              key="preview"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            >
+              <Card className="glass-card flex flex-col items-center justify-between">
+                <CardHeader className="w-full">
+                  <CardTitle>Image Preview</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col items-center justify-center w-full">
+                  {displayImage && (
+                    <motion.img
+                      initial={{ scale: 0.95, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      src={displayImage}
+                      alt="Preview"
+                      className="max-w-full max-h-[400px] rounded-md shadow-lg mb-4 object-contain"
+                    />
+                  )}
+                </CardContent>
+                <CardFooter className="w-full">
+                  <Button 
+                    onClick={handleEdit}
+                    className="w-full"
+                    variant="default"
+                  >
+                    Edit Image
+                  </Button>
+                </CardFooter>
+              </Card>
+              
+              <Card className="glass-card">
+                <CardHeader>
+                  <CardTitle>Image Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="metadata-grid">
+                    <div className="metadata-item">
+                      <span className="metadata-label">Filename</span>
+                      <span className="metadata-value">{files[0]?.name}</span>
+                    </div>
+                    <div className="metadata-item">
+                      <span className="metadata-label">Format</span>
+                      <span className="metadata-value">{files[0]?.name.split(".").pop().toUpperCase()}</span>
+                    </div>
+                    {croppedURL && (
+                      <div className="metadata-item">
+                        <span className="metadata-label">Status</span>
+                        <span className="metadata-value">
+                          <span className="badge-success">Cropped</span>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {files.length > 0 && (
+                    <div className="thumbnails-grid">
+                      {files.map((file, index) => (
+                        <div key={index} className="thumbnail">
+                          <img 
+                            src={file.preview} 
+                            alt={file.name} 
+                            className="rounded-md shadow-md" 
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter>
+                  {downloadURL && (
+                    <Button 
+                      variant="default" 
+                      className="w-full download-button"
+                      asChild
+                    >
+                      <a href={downloadURL} download>
+                        Download Cropped RAW
+                      </a>
+                    </Button>
+                  )}
+                </CardFooter>
+              </Card>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="edit"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="w-full"
+            >
+              <Card className="glass-card">
+                <CardHeader>
+                  <CardTitle>Crop Image</CardTitle>
+                  <CardDescription>
+                    Adjust the crop area to select the portion of the image you want to keep
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FileCrop
+                    imageSrc={displayImage}
+                    onCropComplete={(blob, cropData) => sendCropDataToBackend(cropData)}
+                    onCancel={handleCancelCrop}
+                  />
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
