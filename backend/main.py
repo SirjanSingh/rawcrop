@@ -43,6 +43,11 @@ class CropData(BaseModel):
     width: int
     height: int
 
+
+@app.get("/")
+async def root():
+    return {"message": "🎉 RawCrop backend is live!"}
+    
 @app.post("/crop-raw/")
 async def crop_raw_image(data: CropData):
     """
