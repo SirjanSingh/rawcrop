@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import FileUpload from "@/components/ui/FileUpload";
-import FileCrop from "@/components/ui/FileCrop";
+import FileUpload from "@/components/ui/fileUpload";
+import FileCrop from "@/components/ui/fileCrop";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
