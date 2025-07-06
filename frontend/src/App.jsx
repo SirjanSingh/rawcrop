@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 function App() {
   const [files, setFiles] = useState([]);
   const [previewURL, setPreviewURL] = useState(null);
@@ -39,7 +41,7 @@ function App() {
   const clearAllData = async () => {
     if (!window.confirm("Are you sure you want to delete all files?")) return;
     try {
-      const response = await fetch("http://127.0.0.1:8000/clear-data", {
+      const response = await fetch("${API_URL}/clear-data", {
         method: "DELETE",
       });
       const data = await response.json();
@@ -57,7 +59,7 @@ function App() {
     if (!files.length) return;
     setLoading(true);
     try {
-      const response = await fetch("http://127.0.0.1:8000/crop-raw/", {
+      const response = await fetch("${API_URL}/crop-raw/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
