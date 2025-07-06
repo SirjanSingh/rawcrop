@@ -14,7 +14,7 @@
     "aos": "^2.3.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "cropperjs": "^2.0.0",
+    "cropperjs": "^1.5.13",
     "framer-motion": "^12.7.4",
     "lucide-react": "^0.479.0",
     "react": "^19.0.0",
