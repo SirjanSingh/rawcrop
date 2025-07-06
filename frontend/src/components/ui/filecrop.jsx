@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import Cropper from "react-cropper";
-import "../../../node_modules/cropperjs/dist/cropper.css";
+import "cropperjs/dist/cropper.css";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
