@@ -99,8 +99,8 @@ async def crop_raw_image(data: CropData):
         # Return both a download URL for the raw file + a browser-friendly preview
         return {
             "message": "RAW image cropped successfully.",
-            "cropped_raw_url": f"${API_URL}/download/cropped/{os.path.basename(cropped_raw_path)}",
-            "cropped_preview_url": f"${API_URL}/processed/{os.path.basename(cropped_preview_jpg)}"
+            "cropped_raw_url": f"{API_URL}/download/cropped/{os.path.basename(cropped_raw_path)}",
+            "cropped_preview_url": f"{API_URL}/processed/{os.path.basename(cropped_preview_jpg)}"
         }
 
     except Exception as e:
@@ -128,8 +128,8 @@ async def upload_file(file: UploadFile = File(...)):
             imageio.imwrite(preview_path, rgb_image)
         return JSONResponse(content={
             "filename": unique_filename,
-            "preview": f"${API_URL}/processed/{preview_filename}",
-            "raw_url": f"${API_URL}/download/raw/{unique_filename}",
+            "preview": f"{API_URL}/processed/{preview_filename}",
+            "raw_url": f"{API_URL}/download/raw/{unique_filename}",
             "message": "File uploaded and processed successfully."
         })
     except Exception as e:
