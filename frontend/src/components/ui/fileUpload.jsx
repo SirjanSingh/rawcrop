@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+// const API_URL = import.meta.env.VITE_API_URL || 
+const API_URL = "http://localhost:8000";
 
 export default function FileUpload({ files, setFiles, setPreviewURL }) {
   const [isUploading, setIsUploading] = useState(false);
@@ -50,7 +51,7 @@ export default function FileUpload({ files, setFiles, setPreviewURL }) {
       formData.append("file", file);
       
       try {
-        const response = await fetch("${API_URL}/upload/", {
+        const response = await fetch(API_URL+'/upload/', {
           method: "POST",
           body: formData,
         });

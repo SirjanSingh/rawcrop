@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+// const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = "http://localhost:8000";
 
 function App() {
   const [files, setFiles] = useState([]);
@@ -41,7 +42,7 @@ function App() {
   const clearAllData = async () => {
     if (!window.confirm("Are you sure you want to delete all files?")) return;
     try {
-      const response = await fetch("${API_URL}/clear-data", {
+      const response = await fetch(API_URL+"/clear-data", {
         method: "DELETE",
       });
       const data = await response.json();
@@ -59,7 +60,7 @@ function App() {
     if (!files.length) return;
     setLoading(true);
     try {
-      const response = await fetch("${API_URL}/crop-raw/", {
+      const response = await fetch(API_URL+"/crop-raw/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -99,7 +100,7 @@ function App() {
         <div className="gradient-sphere gradient-sphere-3"></div>
       </div>
       
-      <div className="container mx-auto p-6 relative z-10">
+      <div className="p-6 relative z-10 w-[100vw] max-w-screen">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold gradient-text">RAW Image Editor</h1>
           <div className="flex gap-4">
