@@ -21,14 +21,14 @@ function App() {
   useEffect(() => {
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setTheme(prefersDark ? "dark" : "light");
-    
+
     const handleColorSchemeChange = (e) => {
       setTheme(e.matches ? "dark" : "light");
     };
-    
+
     window.matchMedia("(prefers-color-scheme: dark)")
       .addEventListener("change", handleColorSchemeChange);
-      
+
     return () => {
       window.matchMedia("(prefers-color-scheme: dark)")
         .removeEventListener("change", handleColorSchemeChange);
@@ -42,7 +42,7 @@ function App() {
   const clearAllData = async () => {
     if (!window.confirm("Are you sure you want to delete all files?")) return;
     try {
-      const response = await fetch(API_URL+"/clear-data", {
+      const response = await fetch(API_URL + "/clear-data", {
         method: "DELETE",
       });
       const data = await response.json();
@@ -60,7 +60,7 @@ function App() {
     if (!files.length) return;
     setLoading(true);
     try {
-      const response = await fetch(API_URL+"/crop-raw/", {
+      const response = await fetch(API_URL + "/crop-raw/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -99,15 +99,15 @@ function App() {
         <div className="gradient-sphere gradient-sphere-2"></div>
         <div className="gradient-sphere gradient-sphere-3"></div>
       </div>
-      
-      <div className="p-6 relative z-10 w-[100vw] max-w-screen">
+
+      <div className="p-6 relative z-10 w-[99vw] max-w-screen">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold gradient-text">RAW Image Editor</h1>
           <div className="flex gap-4">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              onClick={toggleTheme} 
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggleTheme}
               className="theme-toggle"
             >
               {theme === 'dark' ? '☀️' : '🌙'}
@@ -121,7 +121,7 @@ function App() {
             </Button>
           </div>
         </header>
-        
+
         {loading && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="pulse-loader">
@@ -139,9 +139,11 @@ function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center mt-16"
+              className="flex items-center justify-center min-h-screen px-4 -mt-16"
             >
-              <Card className="w-full max-w-2xl mx-auto glass-card">
+
+              {/* <Card className="w-full max-w-2xl mx-auto glass-card"> */}
+              <Card className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[50vw] mx-auto px-4 py-6 glass-card">
                 <CardHeader>
                   <CardTitle className="text-2xl">Upload your RAW file</CardTitle>
                   <CardDescription>
@@ -185,7 +187,7 @@ function App() {
                   )}
                 </CardContent>
                 <CardFooter className="w-full">
-                  <Button 
+                  <Button
                     onClick={handleEdit}
                     className="w-full"
                     variant="default"
@@ -194,7 +196,7 @@ function App() {
                   </Button>
                 </CardFooter>
               </Card>
-              
+
               <Card className="glass-card">
                 <CardHeader>
                   <CardTitle>Image Information</CardTitle>
@@ -218,15 +220,15 @@ function App() {
                       </div>
                     )}
                   </div>
-                  
+
                   {files.length > 0 && (
                     <div className="thumbnails-grid">
                       {files.map((file, index) => (
                         <div key={index} className="thumbnail">
-                          <img 
-                            src={file.preview} 
-                            alt={file.name} 
-                            className="rounded-md shadow-md" 
+                          <img
+                            src={file.preview}
+                            alt={file.name}
+                            className="rounded-md shadow-md"
                           />
                         </div>
                       ))}
@@ -235,8 +237,8 @@ function App() {
                 </CardContent>
                 <CardFooter>
                   {downloadURL && (
-                    <Button 
-                      variant="default" 
+                    <Button
+                      variant="default"
                       className="w-full download-button"
                       asChild
                     >
