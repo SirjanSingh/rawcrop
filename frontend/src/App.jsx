@@ -100,7 +100,7 @@ function App() {
         <div className="gradient-sphere gradient-sphere-3"></div>
       </div>
 
-      <div className="p-6 relative z-10 w-[99vw] max-w-screen">
+      <div className="p-6 relative z-10 w-[100vw] h-[99vh]">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold gradient-text">RAW Image Editor</h1>
           <div className="flex gap-4">
@@ -139,7 +139,7 @@ function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="flex items-center justify-center min-h-screen px-4 -mt-16"
+              className="flex items-center justify-center h-[calc(100vh-100px)] px-4 -mt-16"
             >
 
               {/* <Card className="w-full max-w-2xl mx-auto glass-card"> */}
