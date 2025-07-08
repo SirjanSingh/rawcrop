@@ -31,8 +31,8 @@ def get_available_url():
     print("taking local host")
     return "http://localhost:8000"
 
-API_URL = get_available_url()
-
+# API_URL = get_available_url()
+API_URL = "https://rawcrop.onrender.com"
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
