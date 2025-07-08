@@ -16,9 +16,20 @@ from dotenv import load_dotenv
 
 app = FastAPI()
 
-load_dotenv()
+import requests
 
-API_URL = os.getenv('https://rawcrop.onrender.com', "http://localhost:8000")
+def get_available_url():
+    try:
+        # Try the deployed server
+        response = requests.get("https://rawcrop.onrender.com/health", timeout=2)
+        if response.status_code == 200:
+            return "https://rawcrop.onrender.com"
+    except:
+        pass
+    # Fallback to localhost
+    return "http://localhost:8000"
+
+API_URL = get_available_url()
 
 app.add_middleware(
     CORSMiddleware,

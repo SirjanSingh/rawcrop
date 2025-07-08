@@ -6,3 +6,4 @@ numpy
 tifffile
 Pillow
 imageio
+requests
