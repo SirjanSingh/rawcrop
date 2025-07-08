@@ -18,7 +18,7 @@ app = FastAPI()
 
 load_dotenv()
 
-API_URL = os.getenv('VITE_API_URL', "http://localhost:8000")
+API_URL = os.getenv('https://rawcrop.onrender.com', "http://localhost:8000")
 
 app.add_middleware(
     CORSMiddleware,
