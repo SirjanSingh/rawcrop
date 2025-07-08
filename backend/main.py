@@ -23,10 +23,12 @@ def get_available_url():
         # Try the deployed server
         response = requests.get("https://rawcrop.onrender.com/health", timeout=2)
         if response.status_code == 200:
+            print("taking render link")
             return "https://rawcrop.onrender.com"
     except:
         pass
     # Fallback to localhost
+    print("taking local host")
     return "http://localhost:8000"
 
 API_URL = get_available_url()
