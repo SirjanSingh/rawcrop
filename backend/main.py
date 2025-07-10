@@ -35,7 +35,7 @@ def get_available_url():
 API_URL = "https://rawcrop.onrender.com"
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://raw-crop.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
