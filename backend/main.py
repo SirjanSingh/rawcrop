@@ -35,11 +35,12 @@ def get_available_url():
 API_URL = "https://rawcrop-v64g.onrender.com"
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://raw-crop.onrender.com"],
+    allow_origins=["https://raw-crop.onrender.com", "https://rawcrop-v64g.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 UPLOAD_DIR = "uploads"
 PROCESSED_DIR = "processed"
