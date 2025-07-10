@@ -1,0 +1,21 @@
+# Use a lightweight Python base
+FROM python:3.11-slim
+
+# Install exiftool and other system tools
+RUN apt-get update && apt-get install -y libimage-exiftool-perl
+
+# Set working directory
+WORKDIR /app
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all app files
+COPY . .
+
+# Expose the backend port
+EXPOSE 8000
+
+# Start the FastAPI app
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
