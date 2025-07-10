@@ -21,10 +21,10 @@ import requests
 def get_available_url():
     try:
         # Try the deployed server
-        response = requests.get("https://rawcrop.onrender.com/health", timeout=2)
+        response = requests.get("https://rawcrop-v64g.onrender.com/health", timeout=2)
         if response.status_code == 200:
             print("taking render link")
-            return "https://rawcrop.onrender.com"
+            return "https://rawcrop-v64g.onrender.com"
     except:
         pass
     # Fallback to localhost
@@ -32,7 +32,7 @@ def get_available_url():
     return "http://localhost:8000"
 
 # API_URL = get_available_url()
-API_URL = "https://rawcrop.onrender.com"
+API_URL = "https://rawcrop-v64g.onrender.com"
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://raw-crop.onrender.com"],
