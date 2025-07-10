@@ -6,8 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
+// Importing the API URL from environment variables is commented out for local development
+// Uncomment the line below to use environment variables in production
 const API_URL = import.meta.env.VITE_API_URL ;//|| "http://localhost:8000";
+//below one is used for local deevelopment
+// const API_URL = "https://rawcrop.onrender.com";
+console.log(API_URL);
 // const API_URL = "http://localhost:8000";
+
 
 function App() {
   const [files, setFiles] = useState([]);
@@ -155,6 +161,7 @@ function App() {
                     files={files}
                     setFiles={setFiles}
                     setPreviewURL={setPreviewURL}
+                    setLoading={setLoading}
                   />
                 </CardContent>
                 <CardFooter className="text-sm text-muted-foreground">

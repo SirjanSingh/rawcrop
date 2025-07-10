@@ -3,10 +3,10 @@ import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
 
 const API_URL = import.meta.env.VITE_API_URL;// || "http://localhost:8000";
+// const API_URL = "https://rawcrop.onrender.com";
 console.log(API_URL);
-// const API_URL = "http://localhost:8000";
 
-export default function FileUpload({ files, setFiles, setPreviewURL }) {
+export default function FileUpload({ files, setFiles, setPreviewURL , setLoading}) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -39,6 +39,7 @@ export default function FileUpload({ files, setFiles, setPreviewURL }) {
     if (newFiles.length === 0) return;
     
     // Start progress simulation
+    setLoading(true);
     const stopSimulation = simulateProgress();
     
     for (const file of newFiles) {
@@ -79,7 +80,8 @@ export default function FileUpload({ files, setFiles, setPreviewURL }) {
     
     // Stop progress simulation
     stopSimulation();
-    
+    setLoading(false);
+
     setFiles((prevFiles) => [...prevFiles, ...uploadedFiles]);
     if (uploadedFiles.length > 0) {
       setPreviewURL(uploadedFiles[0].preview);
@@ -132,7 +134,7 @@ export default function FileUpload({ files, setFiles, setPreviewURL }) {
     <div className="upload-container">
       <div
         {...getRootProps()}
-        className={`upload-dropzone ${isDragActive ? 'active' : ''}`}
+        className={`upload-dropzone ${isDragActive ? 'active' : ''} ${isUploading ? 'pointer-events-none opacity-70' : ''}`}
       >
         <input {...getInputProps()} />
         <motion.div
