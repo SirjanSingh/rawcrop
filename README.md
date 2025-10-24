@@ -1,129 +1,78 @@
-# 🌌 RawCrop – RAW Image Cropping Tool
+# RawCrop — RAW Image Cropping & Preview (React + FastAPI)
 
-**RawCrop** is an open-source tool designed for astrophotographers, professionals, and hobbyists who want to crop RAW image files interactively — directly in the browser. Built with React and FastAPI, RawCrop provides a smooth workflow for previewing, cropping, and downloading RAW files with metadata preserved.
+RawCrop is a simple, fast, and accurate RAW image cropping and preview tool.
 
-🔗 **Live Demo**: [https://raw-crop.onrender.com/](https://raw-crop.onrender.com/)
+- **Frontend**: React (Vite) + Tailwind + Framer Motion  
+- **Backend**: FastAPI + rawpy + Pillow + tifffile + imageio  
+- **RAW types**: .NEF, .CR2, .ARW, .DNG (others may work if `rawpy` supports them)
 
----
+> This repository is prepped for Hacktoberfest and general open-source contributions. See **Contributing** below.
 
-## 🚀 Features
+## Features
+- Upload RAW files and render color previews
+- Pixel-perfect crop selection with live preview
+- Download cropped RAW region and JPEG preview
+- Minimal, responsive UI
 
--  **RAW File Upload**: Supports common RAW formats like `.NEF`, `.CR2`, `.ARW`, and `.DNG`.
--  **Interactive Cropping**: Preview and crop your image with a modern drag-and-resize interface.
--  **Color Preview + RAW Output**: View cropped area in color JPEG while downloading the original raw Bayer cropped file.
--  **Metadata Retention**: Maintains EXIF and metadata using `exiftool`.
--  **Clear All**: One-click cleanup of uploaded and processed files.
-
----
-
-## 🧩 Tech Stack
-
-### Frontend
-- **React + TailwindCSS**
-- **Cropper.js** for interactive cropping
-- **Drag & Drop + Paste Uploads** with `react-dropzone`
-
-### Backend
-- **FastAPI** with CORS support
-- **rawpy**, **imageio**, **Pillow**, **tifffile**
-- **EXIFTool** for metadata copying
-
----
-
-## ⚙️ How It Works
-
-1. **Upload** a RAW image via drag & drop or clipboard paste.
-2. A **preview** is generated using `rawpy`.
-3. **Crop** interactively in the browser.
-4. The frontend sends crop coordinates to the backend.
-5. Backend:
-   - Crops Bayer data from the RAW file.
-   - Creates a **color JPEG preview** for display.
-   - Reattaches original **EXIF metadata**.
-6. Download the cropped RAW file or preview.
-
----
-
-## ⚠️ Important Notice
-
-After downloading the cropped RAW image, it might appear **black or blank** when opened in regular image viewers. This is expected behavior because:
-
-- The file contains **uncooked RAW Bayer data**, which normal viewers cannot interpret.
-- You need to open the image in **advanced photo editing or astronomy tools** such as **Adobe Photoshop (with Camera RAW)** or **Siril**, **RawTherapee**, or **Darktable** to properly view and process the data.
-
-These tools can correctly decode and demosaic the sensor data to render the image.
-
----
-
-## 📂 Folder Structure
+## Monorepo Layout
 
 ```
-📦 rawcrop
- ┣ 📂 frontend (React + Tailwind)
- ┃ ┣ 📜 App.jsx
- ┃ ┣ 📜 fileUpload.jsx
- ┃ ┣ 📜 filecrop.jsx
- ┃ ┣ 📜 card.jsx, button.jsx, input.jsx
- ┃ ┣ 📜 index.css, filecrop.css, App.css
- ┃ ┣ 📜 cropImage.js
- ┃ ┣ 📜 imageUtils.js
- ┗ 📂 backend (FastAPI)
-   ┣ 📜 main.py
+rawcrop-master/
+  frontend/    # React + Vite app
+  backend/     # FastAPI app (rawpy + Pillow + tifffile + imageio)
+  .github/     # Issue templates and CI
 ```
 
----
+## Quick Start
 
-## 🛠️ Local Development
+### Backend (FastAPI)
 
-### Frontend
+```bash
+cd backend
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# Unix/Mac: source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+By default the app serves at http://127.0.0.1:8000.  
+Update CORS/URL in the frontend if needed.
+
+### Frontend (Vite React)
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-### Backend
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
+Open the printed local URL (commonly http://localhost:5173).
 
----
+## Configuration
 
-## ✅ To Do
+- If your backend is deployed (e.g. Render), set the base URL in the frontend API helper (e.g. an `.env` or config file).
+- Supported RAWs depend on `rawpy`/`libraw`. Some edge cases may fail to decode.
 
-- [ ] Batch cropping support
-- [ ] Export in multiple formats (TIFF, DNG)
-- [ ] User auth & file history
----
+## Contributing
 
-##  Future Enhancements
+We welcome small, focused PRs:
+- UI/UX polish, accessibility, copy updates
+- Better errors and edge case handling
+- Non-invasive code comments / docs
+- Build/dev workflow improvements
 
--  AI-powered noise reduction (premium feature)
--  Cloud storage integration
--  Advanced editing tools
+Please read:
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
----
+For issues, see [new issue](.github/ISSUE_TEMPLATE/bug_report.md) or [feature request](.github/ISSUE_TEMPLATE/feature_request.md).
 
-## 🤝 Contributing
+## Security
 
-Contributions are welcome! To contribute:
+If you find a security issue, **please do not open a public issue**.  
+See [SECURITY.md](SECURITY.md) for reporting instructions.
 
-1. Fork the repository.
-2. Create a new branch (e.g. `feature-xyz`).
-3. Commit your changes and push to your fork.
-4. Open a Pull Request.
+## License
 
----
-
-## 🧠 Credits
-
-- Made by [Sirjan Singh](https://github.com/SirjanSingh)
-- Powered by `rawpy`, `FastAPI`, `React`, `TailwindCSS`, `CropperJS`, `ExifTool`
-
----
-
-## 📸 Try it Live
-
-👉 [https://raw-crop.onrender.com/](https://raw-crop.onrender.com/)
+MIT © 2025 Sirjan Singh
