@@ -8,9 +8,11 @@ import "./App.css";
 
 // Importing the API URL from environment variables is commented out for local development
 // Uncomment the line below to use environment variables in production
-const API_URL = import.meta.env.VITE_API_URL ;//|| "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL 
+// ;
+|| "http://localhost:8000";
 //below one is used for local deevelopment
-// const API_URL = "https://rawcrop.onrender.com";
+// const API_URL = "https://rawcrop-v64g.onrender.com";
 console.log(API_URL);
 // const API_URL = "http://localhost:8000";
 
