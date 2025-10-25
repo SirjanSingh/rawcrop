@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { Button } from "@/components/ui/button";
@@ -88,8 +88,50 @@ function FileCrop({ imageSrc, onCropComplete, onCancel }) {
     );
   };
 
+  // Keyboard shortcuts for cropping
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const cropper = cropperRef.current?.cropper;
+      if (!cropper) return;
+
+      const step = event.shiftKey ? 10 : 1;
+
+      // Only intercept relevant keys
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter','Escape'].includes(event.key)) {
+        event.preventDefault();
+      }
+
+      try {
+        if (event.key === 'ArrowLeft') {
+          const box = cropper.getCropBoxData();
+          cropper.setCropBoxData({ left: box.left - step, top: box.top, width: box.width, height: box.height });
+        } else if (event.key === 'ArrowRight') {
+          const box = cropper.getCropBoxData();
+          cropper.setCropBoxData({ left: box.left + step, top: box.top, width: box.width, height: box.height });
+        } else if (event.key === 'ArrowUp') {
+          const box = cropper.getCropBoxData();
+          cropper.setCropBoxData({ left: box.left, top: box.top - step, width: box.width, height: box.height });
+        } else if (event.key === 'ArrowDown') {
+          const box = cropper.getCropBoxData();
+          cropper.setCropBoxData({ left: box.left, top: box.top + step, width: box.width, height: box.height });
+        } else if (event.key === 'Enter') {
+          handleCrop();
+        } else if (event.key === 'Escape') {
+          onCancel && onCancel();
+        }
+      } catch (err) {
+        // ignore any cropper exceptions
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onCancel]);
+
   return (
-    <div className="w-full flex flex-col items-center space-y-6">
+    <div className="w-full flex flex-col items-center space-y-6" tabIndex={0}>
       <div className="w-full max-w-4xl h-[500px] relative overflow-hidden rounded-lg shadow-lg">
         <Cropper
           src={imageSrc}
@@ -207,6 +249,9 @@ function FileCrop({ imageSrc, onCropComplete, onCancel }) {
             >
               Cancel
             </Button>
+          </div>
+          <div className="w-full text-xs text-muted-foreground mt-2">
+            Keyboard: use Arrow keys to nudge the crop box (hold Shift for larger steps). Press Enter to apply crop, Esc to cancel.
           </div>
           
           {croppedData && (
