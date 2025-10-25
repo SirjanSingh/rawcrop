@@ -17,7 +17,7 @@ We use `pytest` to test the FastAPI endpoints, ensuring reliability and catching
 
 ```bash
 cd backend
-pip install -r requirements-dev.txt
+pip install -r requirements.txt -r requirements-dev.txt
 ```
 
 ### Run All Tests
