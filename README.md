@@ -24,6 +24,15 @@ rawcrop-master/
 ```
 
 ## Quick Start
+### Option 1: Docker (Recommended)
+```bash
+docker-compose up --build
+```
+- Frontend: http://localhost:5173
+- Backend: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+
+### Option 2: Manual Setup
 
 ### Backend (FastAPI)
 
@@ -48,6 +57,14 @@ npm run dev
 ```
 
 Open the printed local URL (commonly http://localhost:5173).
+
+## Testing
+```bash
+cd backend
+pip install -r requirements-dev.txt
+pytest -v
+```
+See `backend/tests/README.md` for more details.
 
 ## Configuration
 
