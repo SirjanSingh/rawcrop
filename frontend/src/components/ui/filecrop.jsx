@@ -3,10 +3,12 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Slider } from "@/components/ui/slider";
 
 function FileCrop({ imageSrc, onCropComplete, onCancel }) {
   const cropperRef = useRef(null);
   const [croppedData, setCroppedData] = useState(null);
+  const [quality, setQuality] = useState(90); // Default quality 90%
   const [cropInfo, setCropInfo] = useState({
     x: 0,
     y: 0,
@@ -39,7 +41,7 @@ function FileCrop({ imageSrc, onCropComplete, onCancel }) {
         }
       },
       "image/jpeg",
-      0.9
+      quality / 100
     );
   };
 
@@ -62,6 +64,28 @@ function FileCrop({ imageSrc, onCropComplete, onCancel }) {
         rotation: 0,
       });
     }
+  };
+
+  const handleDownload = () => {
+    const cropper = cropperRef.current?.cropper;
+    if (!cropper) return;
+
+    cropper.getCroppedCanvas().toBlob(
+      (blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `edited-image-${quality}quality.jpg`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      },
+      "image/jpeg",
+      quality / 100
+    );
   };
 
   return (
@@ -145,6 +169,29 @@ function FileCrop({ imageSrc, onCropComplete, onCancel }) {
         </div>
         
         <div className="flex flex-col sm:flex-row items-center gap-6 justify-between">
+          <div className="flex items-center gap-4 w-full">
+            <div className="flex-grow max-w-xs">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                JPEG Quality: {quality}%
+              </label>
+              <Slider
+                value={[quality]}
+                onValueChange={(value) => setQuality(value[0])}
+                min={70}
+                max={100}
+                step={1}
+                className="w-full"
+              />
+            </div>
+            <Button
+              onClick={handleDownload}
+              variant="outline"
+              className="whitespace-nowrap"
+              disabled={!croppedData}
+            >
+              Download JPEG
+            </Button>
+          </div>
           <div className="flex gap-4 w-full sm:w-auto">
             <Button
               onClick={handleCrop}
