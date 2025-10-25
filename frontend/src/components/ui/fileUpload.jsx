@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
 
-const API_URL = import.meta.env.VITE_API_URL;// || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 // const API_URL = "https://rawcrop.onrender.com";
 console.log(API_URL);
 
@@ -53,19 +53,37 @@ export default function FileUpload({ files, setFiles, setPreviewURL , setLoading
       formData.append("file", file);
       
       try {
-        const response = await fetch(API_URL+'/upload/', {
+        const response = await fetch(API_URL + '/upload/', {
           method: "POST",
           body: formData,
         });
-        
+
+        // Helper: safely parse response body as JSON when possible
+        const safeParseResponse = async (resp) => {
+          const contentType = resp.headers.get('content-type') || '';
+          // No content (204) => return null
+          if (resp.status === 204) return null;
+          try {
+            if (contentType.includes('application/json')) {
+              return await resp.json();
+            }
+            // If not JSON, try text and attempt JSON.parse
+            const text = await resp.text();
+            if (!text) return null;
+            try { return JSON.parse(text); } catch { return { _text: text }; }
+          } catch (err) {
+            return null;
+          }
+        };
+
+        const parsed = await safeParseResponse(response);
+
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(
-            errorData.error || `Server responded with ${response.status}`
-          );
+          const errMsg = parsed && parsed.error ? parsed.error : `Server responded with ${response.status}`;
+          throw new Error(errMsg);
         }
-        
-        const data = await response.json();
+
+        const data = parsed || {};
         uploadedFiles.push({
           name: file.name,
           preview: data.preview,

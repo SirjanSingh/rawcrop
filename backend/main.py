@@ -32,10 +32,19 @@ def get_available_url():
     return "http://localhost:8000"
 
 # API_URL = get_available_url()
-API_URL = "https://rawcrop-v64g.onrender.com"
+# Default to localhost during development so returned URLs match local server
+API_URL = "http://localhost:8000"
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://raw-crop.onrender.com", "https://rawcrop-v64g.onrender.com"],
+    allow_origins=[
+        "https://raw-crop.onrender.com",
+        "https://rawcrop-v64g.onrender.com",
+        # Local dev Vite / frontend origins
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://localhost:8000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
