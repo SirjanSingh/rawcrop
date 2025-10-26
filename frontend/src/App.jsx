@@ -109,26 +109,31 @@ function App() {
       </div>
 
       <div className="p-6 relative z-10 w-[100vw] h-[99vh]">
-        <header className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold gradient-text">RAW Image Editor</h1>
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={toggleTheme}
-              className="theme-toggle"
-            >
-              {theme === 'dark' ? '☀️' : '🌙'}
-            </Button>
-            <Button
-              onClick={clearAllData}
-              variant="destructive"
-              className="font-semibold"
-            >
-              Clear Data
-            </Button>
-          </div>
-        </header>
+        <header className="flex flex-col items-center mb-8 gap-6 w-full">
+    <div className="w-full flex justify-between items-center">
+      <div className="flex-1"></div>
+      <h1 className="text-5xl md:text-6xl font-bold gradient-text text-center flex-1">
+        RAW Image Editor
+      </h1>
+      <div className="flex gap-4 flex-1 justify-end">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={toggleTheme}
+          className="theme-toggle"
+        >
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </Button>
+        <Button
+          onClick={clearAllData}
+          variant="destructive"
+          className="font-semibold"
+        >
+          Clear Data
+        </Button>
+      </div>
+    </div>
+  </header>
 
         {loading && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -149,9 +154,9 @@ function App() {
               transition={{ duration: 0.5 }}
               className="flex items-center justify-center h-[calc(100vh-100px)] px-4 -mt-16"
             >
-
-              {/* <Card className="w-full max-w-2xl mx-auto glass-card"> */}
-              <Card className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[50vw] mx-auto px-4 py-6 glass-card">
+              
+              <Card className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[50vw] glass-card p-6">
+                <div className="m-6">
                 <CardHeader>
                   <CardTitle className="text-2xl">Upload your RAW file</CardTitle>
                   <CardDescription>
@@ -169,7 +174,9 @@ function App() {
                 <CardFooter className="text-sm text-muted-foreground">
                   You can also paste images from your clipboard
                 </CardFooter>
+                </div>
               </Card>
+              
             </motion.div>
           ) : mode === "preview" ? (
             <motion.div
