@@ -31,11 +31,14 @@ def get_available_url():
     print("taking local host")
     return "http://localhost:8000"
 
-# API_URL = get_available_url()
-API_URL = "https://rawcrop-v64g.onrender.com"
+API_URL = get_available_url()
+# for offline development
+# API_URL = "http://127.0.0.1:8000" 
+# for online development
+# API_URL = "https://rawcrop-v64g.onrender.com"
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://raw-crop.onrender.com", "https://rawcrop-v64g.onrender.com"],
+    allow_origins=["https://raw-crop.onrender.com", "https://rawcrop-v64g.onrender.com","http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -73,15 +76,20 @@ async def crop_raw_image(data: CropData):
     Crops the *raw Bayer data* for astro stacking, AND also produces a color
     JPEG preview so that you can see the result in your browser.
     """
-    raw_path = os.path.join(UPLOAD_DIR, data.filename)
-    base, ext = os.path.splitext(data.filename)
-
-    # 1) Final cropped raw file path
-    cropped_raw_path = os.path.join(PROCESSED_DIR, f"{base}_cropped{ext}")
-    # 2) Color preview for the browser
-    cropped_preview_jpg = os.path.join(PROCESSED_DIR, f"{base}_cropped_preview.jpg")
-
     try:
+        raw_path = os.path.join(UPLOAD_DIR, data.filename)
+        
+        # Check if file exists
+        if not os.path.exists(raw_path):
+            return JSONResponse(content={"error": f"File not found: {data.filename}"}, status_code=404)
+        
+        base, ext = os.path.splitext(data.filename)
+
+        # 1) Final cropped raw file path
+        cropped_raw_path = os.path.join(PROCESSED_DIR, f"{base}_cropped{ext}")
+        # 2) Color preview for the browser
+        cropped_preview_jpg = os.path.join(PROCESSED_DIR, f"{base}_cropped_preview.jpg")
+
         # -- Read RAW data once with rawpy --
         with rawpy.imread(raw_path) as raw_img:
             # (A) Crop the raw Bayer data
@@ -89,7 +97,7 @@ async def crop_raw_image(data: CropData):
             x, y, w, h = data.x, data.y, data.width, data.height
 
             if (y + h) > raw_data.shape[0] or (x + w) > raw_data.shape[1]:
-                return JSONResponse({"error": "Crop dimensions exceed raw image bounds."}, status_code=400)
+                return JSONResponse(content={"error": "Crop dimensions exceed raw image bounds."}, status_code=400)
 
             cropped_bayer = raw_data[y:y+h, x:x+w]
             
@@ -111,13 +119,14 @@ async def crop_raw_image(data: CropData):
             preview_cropped.save(cropped_preview_jpg, "JPEG")
 
         # Return both a download URL for the raw file + a browser-friendly preview
-        return {
+        return JSONResponse(content={
             "message": "RAW image cropped successfully.",
             "cropped_raw_url": f"{API_URL}/download/cropped/{os.path.basename(cropped_raw_path)}",
             "cropped_preview_url": f"{API_URL}/processed/{os.path.basename(cropped_preview_jpg)}"
-        }
+        })
 
     except Exception as e:
+        print(f"Error in crop_raw_image: {str(e)}")
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
 
