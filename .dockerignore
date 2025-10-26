@@ -33,11 +33,6 @@ Thumbs.db
 .gitignore
 .gitattributes
 
-# Documentation
-README.md
-*.md
-docs/
-
 # CI/CD
 .github/
 .gitlab-ci.yml
