@@ -113,6 +113,7 @@ function App() {
 <button
   id="theme-toggle"
   aria-label="Toggle theme"
+  aria-pressed={theme === 'dark'}
   className="theme-toggle-btn"
   onClick={toggleTheme}
   type="button"
