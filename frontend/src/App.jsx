@@ -135,7 +135,7 @@ function App() {
         <Button
           onClick={clearAllData}
           variant="destructive"
-          className="font-semibold"
+          className="font-semibold clear-data-btn"
         >
           Clear Data
         </Button>

@@ -9,6 +9,12 @@
   overflow-x: hidden;
 }
 
+/* Page header spacing */
+header {
+  padding: 0.5rem 2rem;
+  box-sizing: border-box;
+}
+
 /* Theme styles */
 .app-container.light {
   --text-primary: #1a1a2e;
@@ -25,6 +31,20 @@
   color: var(--text-primary);
   background-color: var(--bg-primary);
 }
+
+/* Clear Data button text override */
+.clear-data-btn {
+  /* Use accent color for visibility; override component text color */
+  color: var(--accent-color) !important;
+  transition: color 150ms ease;
+}
+
+.clear-data-btn:hover,
+.clear-data-btn:focus {
+  /* Whitish color on hover/focus for better contrast */
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+ 
 
 .app-container.dark {
   --text-primary: #f0f0f0;
@@ -303,6 +323,7 @@
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
+    padding: 1rem 1rem;
   }
   
   header .flex.gap-4 {
