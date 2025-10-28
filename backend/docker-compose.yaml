@@ -1,0 +1,11 @@
+services:
+  rawcrop-backend:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount uploads and processed directories for persistent storage
+      - ./uploads:/app/uploads
+      - ./processed:/app/processed

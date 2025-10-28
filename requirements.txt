@@ -1,7 +1,0 @@
-fastapi
-uvicorn[standard]
-python-multipart
-rawpy
-numpy
-tifffile
-Pillow
