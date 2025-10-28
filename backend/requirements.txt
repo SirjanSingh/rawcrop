@@ -7,3 +7,5 @@ tifffile
 Pillow
 imageio
 requests
+python-dotenv
+imageio

@@ -13,20 +13,24 @@ import subprocess
 from tifffile import imwrite
 from PIL import Image
 from dotenv import load_dotenv
-
+load_dotenv()
 app = FastAPI()
 
 import requests
 
 def get_available_url():
-    try:
-        # Try the deployed server
-        response = requests.get("https://rawcrop-v64g.onrender.com/health", timeout=2)
-        if response.status_code == 200:
-            print("taking render link")
-            return "https://rawcrop-v64g.onrender.com"
-    except:
-        pass
+    # try:
+    #     # Try the deployed server
+    #     response = requests.get("https://rawcrop-v64g.onrender.com/health", timeout=2)
+    #     if response.status_code == 200:
+    #         print("taking render link")
+    #         return "https://rawcrop-v64g.onrender.com"
+    # except:
+    #     pass
+    api_url = os.getenv("API_URL")
+    if api_url:
+        print(f"Using API_URL from environment: {api_url}")
+        return api_url 
     # Fallback to localhost
     print("taking local host")
     return "http://localhost:8000"
@@ -194,3 +198,7 @@ async def download_cropped(filename: str):
     if not os.path.exists(file_path):
         return JSONResponse(status_code=404, content={"error": "File not found"})
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
