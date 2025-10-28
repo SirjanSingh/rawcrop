@@ -27,13 +27,19 @@ rawcrop-master/
 
 ### Backend (FastAPI)
 
+This project uses [uv](https://github.com/astral-sh/uv) for fast Python package management.
+
+**Option 1: Using uv**
 ```bash
 cd backend
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Unix/Mac: source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload
+uv sync
+uv run uvicorn main:app --reload
+```
+
+**Option 2: Using Docker Compose**
+```bash
+cd backend
+docker compose up
 ```
 
 By default the app serves at http://127.0.0.1:8000.  
