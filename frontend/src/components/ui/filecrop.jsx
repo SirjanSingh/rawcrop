@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,45 @@ function FileCrop({ imageSrc, onCropComplete, onCancel }) {
     height: 0,
     rotation: 0,
   });
+  const [aspectRatio, setAspectRatio] = useState(NaN);
+
+  useEffect(() => {
+  const cropper = cropperRef.current?.cropper;
+  if (!cropper) return;
+
+  cropper.setAspectRatio(aspectRatio);
+
+  // Get canvas dimensions (the visible image area in Cropper)
+  const canvasData = cropper.getCanvasData();
+  const { width: canvasWidth, height: canvasHeight } = canvasData;
+  const autoCropArea = 0.8; // fill 80% of available space
+
+  if (!isNaN(aspectRatio)) {
+    // Compute centered box based on canvas coordinates
+    let cropBoxWidth, cropBoxHeight;
+
+    if (canvasWidth / canvasHeight > aspectRatio) {
+      cropBoxHeight = canvasHeight * autoCropArea;
+      cropBoxWidth = cropBoxHeight * aspectRatio;
+    } else {
+      cropBoxWidth = canvasWidth * autoCropArea;
+      cropBoxHeight = cropBoxWidth / aspectRatio;
+    }
+
+    const left = (canvasWidth - cropBoxWidth) / 2 + canvasData.left;
+    const top = (canvasHeight - cropBoxHeight) / 2 + canvasData.top;
+
+    cropper.setCropBoxData({
+      left,
+      top,
+      width: cropBoxWidth,
+      height: cropBoxHeight,
+    });
+  } else {
+    // Freeform mode
+    cropper.setAspectRatio(NaN);
+  }
+}, [aspectRatio]);
 
   const handleCrop = () => {
     const cropper = cropperRef.current?.cropper;
@@ -68,17 +107,18 @@ function FileCrop({ imageSrc, onCropComplete, onCancel }) {
     <div className="w-full flex flex-col items-center space-y-6">
       <div className="w-full max-w-4xl h-[500px] relative overflow-hidden rounded-lg shadow-lg">
         <Cropper
+          key={aspectRatio}
           src={imageSrc}
           style={{ height: "100%", width: "100%" }}
-          initialAspectRatio={NaN}
-          aspectRatio={NaN}
+          initialAspectRatio={aspectRatio}
+          aspectRatio={aspectRatio}
           guides={true}
           viewMode={1}
           dragMode="move"
           scalable={true}
           zoomable={true}
           cropBoxMovable={true}
-          cropBoxResizable={true}
+          cropBoxResizable={isNaN(aspectRatio)} 
           responsive={true}
           autoCropArea={0.8}
           checkOrientation={false}
@@ -143,6 +183,20 @@ function FileCrop({ imageSrc, onCropComplete, onCancel }) {
             Reset
           </Button>
         </div>
+
+        <motion.div 
+          className="flex flex-wrap items-center gap-2 justify-center p-2 rounded-lg bg-gray-100 dark:bg-gray-800"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mr-2">Aspect Ratio:</span>
+          <Button variant="outline" size="sm" onClick={() => setAspectRatio(1 / 1)}>1:1</Button>
+          <Button variant="outline" size="sm" onClick={() => setAspectRatio(3 / 2)}>3:2</Button>
+          <Button variant="outline" size="sm" onClick={() => setAspectRatio(4 / 3)}>4:3</Button>
+          <Button variant="outline" size="sm" onClick={() => setAspectRatio(16 / 9)}>16:9</Button>
+          <Button variant="outline" size="sm" onClick={() => setAspectRatio(NaN)}>Custom</Button>
+        </motion.div>
         
         <div className="flex flex-col sm:flex-row items-center gap-6 justify-between">
           <div className="flex gap-4 w-full sm:w-auto">
