@@ -2,7 +2,7 @@
 FROM python:3.11-slim
 
 # Install exiftool and other system tools
-RUN apt-get update && apt-get install -y libimage-exiftool-perl
+RUN apt-get update && apt-get install -y libimage-exiftool-perl && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
