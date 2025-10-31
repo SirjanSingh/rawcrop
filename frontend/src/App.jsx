@@ -8,10 +8,12 @@ import "./App.css";
 
 // Importing the API URL from environment variables is commented out for local development
 // Uncomment the line below to use environment variables in production
-const API_URL = import.meta.env.VITE_API_URL ;//|| "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL 
+// ;//comment this line and uncomment below to run local python server
 //below one is used for local deevelopment
-// const API_URL = "https://rawcrop.onrender.com";
+|| "http://localhost:8000";
 console.log(API_URL);
+// const API_URL = "https://rawcrop-v64g.onrender.com";
 // const API_URL = "http://localhost:8000";
 
 
@@ -77,6 +79,13 @@ function App() {
           height: cropData.height,
         }),
       });
+
+      // Check if response is OK before parsing
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Server error: ${response.status} - ${errorText}`);
+      }
+
       const result = await response.json();
       if (result.cropped_preview_url) {
         setCroppedURL(result.cropped_preview_url);
@@ -86,6 +95,7 @@ function App() {
       }
       setMode("preview");
     } catch (error) {
+      console.error("Error during cropping:", error);
       alert("Error during cropping: " + error.message);
     } finally {
       setLoading(false);
@@ -166,9 +176,9 @@ function App() {
               transition={{ duration: 0.5 }}
               className="flex items-center justify-center h-[calc(100vh-100px)] px-4 -mt-16"
             >
-
-              {/* <Card className="w-full max-w-2xl mx-auto glass-card"> */}
-              <Card className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[50vw] mx-auto px-4 py-6 glass-card">
+              
+              <Card className="w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[50vw] glass-card p-6">
+                <div className="m-6">
                 <CardHeader>
                   <CardTitle className="text-2xl">Upload your RAW file</CardTitle>
                   <CardDescription>
@@ -186,7 +196,9 @@ function App() {
                 <CardFooter className="text-sm text-muted-foreground">
                   You can also paste images from your clipboard
                 </CardFooter>
+                </div>
               </Card>
+              
             </motion.div>
           ) : mode === "preview" ? (
             <motion.div

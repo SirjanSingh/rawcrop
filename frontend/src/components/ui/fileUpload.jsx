@@ -2,9 +2,16 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
 
-const API_URL = import.meta.env.VITE_API_URL;// || "http://localhost:8000";
-// const API_URL = "https://rawcrop.onrender.com";
+// Importing the API URL from environment variables is commented out for local development
+// Uncomment the line below to use environment variables in production
+const API_URL = import.meta.env.VITE_API_URL 
+// ;//comment this line and uncomment below to run local python server
+//below one is used for local deevelopment
+|| "http://localhost:8000";
 console.log(API_URL);
+// const API_URL = "https://rawcrop-v64g.onrender.com";
+// const API_URL = "http://localhost:8000";
+
 
 export default function FileUpload({ files, setFiles, setPreviewURL , setLoading}) {
   const [isUploading, setIsUploading] = useState(false);
