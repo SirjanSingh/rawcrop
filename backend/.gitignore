@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Env files
+.env
+.env.*
+
+# Byte-compiled
+*.egg-info/
+*.egg
+build/
+dist/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+
+# FastAPI / App generated folders
+uploads/
+processed/
+
+# OS junk
+.DS_Store
+Thumbs.db
