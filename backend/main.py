@@ -31,11 +31,13 @@ def get_available_url():
     print("taking local host")
     return "http://localhost:8000"
 
-API_URL = get_available_url()
+# API_URL = get_available_url()
 # for offline development
 # API_URL = "http://127.0.0.1:8000" 
 # for online development
-# API_URL = "https://rawcrop-v64g.onrender.com"
+
+API_URL = "https://rawcrop-v64g.onrender.com"
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://raw-crop.onrender.com", "https://rawcrop-v64g.onrender.com","http://localhost:5173"],
